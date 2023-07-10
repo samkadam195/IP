@@ -1,0 +1,264 @@
+A] Aim: Program to perform Basic Intensity Transformation functions.
+
+clc;
+clear all;
+close all;
+a= imread('cameraman.tif');
+c=imread('peppers.png')
+figure(1);
+imshow(a);
+title('original image');
+  
+
+%Gray scale image Image
+b=rgb2gray(c);
+figure(2);
+imshow(b);
+title('Gray image');
+
+
+%Negative image
+b = 255-a;
+figure(3);
+imshow(b);
+title('Negative image')
+  
+
+%Log transform
+l=255;
+d=l/log10(1+1);
+e=d*log10(1+double(c));
+f=uint8(e);
+figure(4);
+imshow(f);
+title('Log Transform');
+  
+
+%power law transform
+gamma=1.4;
+g=double(a).^gamma;
+figure(5)
+imshow(uint8(g));
+title('power law transform');
+ 
+ %Image Thresholding
+[r,c] = size(a);
+Thre = input('Enter the value of Thr=');
+for i = 1:r
+    for j = 1:c
+        if(a(i,j)>Thre)
+            Out(i,j) = 1;
+        else
+            Out(i,j) = 0;
+        end
+    end
+end
+subplot(1,2,1), imshow(a); title('input image');
+subplot(1,2,2), imshow(Out); title('Threshold image');
+  
+
+
+%Contrast stretching
+r=imread('pout.tif');
+[m,n] = size(r);
+ 
+r1=input('enter r1:');
+r2=input('enter r2:');
+s1=input('enter s1:');
+s2=input('enter s2:');
+ 
+a = s1/r1;
+b = (s2-s1)/(r2-r1);
+c = (255-s2)/(255-r2);
+ 
+for i = 1:m
+    for j = 1:n
+        if r(i,j)<r1
+            s(i,j) = a*r(i,j);
+        elseif r(i,j) < r2
+            s(i,j) = b*(r(i,j)-r1)+s1;
+        else
+            s(i,j) = c*(r(i,j)-r2)+s2;
+        end
+    end
+end
+subplot(1,2,1), imshow(r); title('input image');
+subplot(1,2,2), imshow(s); title('contrast image');
+ 
+  
+
+%Bit-plane slicing
+clc;
+clear all;
+i=imread("peppers.png");
+b= double(i);
+subplot(3,3,1);imshow(i);title('Original Image');
+b1= (bitget(b,1));
+subplot(3,3,2);imshow (b1);title('BIT PLANE 1');
+b2= (bitget(b,2));
+subplot(3,3,3);imshow (b2);title('BIT PLANE 2');
+b3= (bitget(b,3));
+subplot(3,3,2);imshow (b3);title('BIT PLANE 3');
+b4= (bitget(b,4));
+subplot(3,3,3);imshow (b4);title('BIT PLANE 4');
+b5= (bitget(b,5));
+subplot(3,3,4);imshow (b5);title('BIT PLANE 5');
+b6= (bitget(b,6));
+subplot(3,3,5);imshow (b6);title('BIT PLANE 6');
+b7= (bitget(b,7));
+subplot(3,3,6);imshow (b7);title('BIT PLANE 7');
+b8= (bitget(b,8));
+subplot(3,3,7);imshow (b8);title('BIT PLANE 8')
+
+
+
+
+
+
+
+B] Aim: Program to plot the histogram of an image and categorise and apply histogram equalization
+
+clc;
+clear all;
+close all;
+a=imread('tire.tif')
+%perform histogram equalization
+b=histeq(a);
+subplot(2,2,1),imshow(a),title('original image'),
+subplot(2,2,2),imshow(b),title('After histogram equalization'),
+subplot(2,2,3),imhist(a),title('original histogram')
+subplot(2,2,4),imhist(b),title('After histogram equalization')
+
+
+
+
+
+
+C] Aim: Write a program to perform convolution and correlation
+
+clc;
+clear all;
+close all;
+%% program for convolution
+figure;
+a=zeros(256,256);
+a(110:140,112:140)=1;
+subplot(2,2,1),imshow(a),title('First input image');
+b=zeros(256,256);
+b(170:200,170:200)=1;
+subplot(2,2,2), imshow(b), title('Second input image');
+d=conv2(a,b,'same');
+subplot(2,2,3), imshow(d),title('Convolution of input images in time domain');
+ 
+%% Correaltion of the same image
+e=imfilter(a,b);
+subplot(2,2,4), imshow(e),title('Correlation of input images in time domain')
+
+ 
+
+
+
+
+
+
+  
+D) Aim: Write a program to apply smoothing and sharpening filters on grayscale and colour images.
+
+%This program is for Averaging spatial Filter
+a=imread('cameraman.tif');
+% Addition of noise to the input image
+b=imnoise(a,'salt & pepper');
+c=imnoise(a,'gaussian');
+d=imnoise(a,'speckle');
+% Defining 3x3 and 5x5 kernel
+h1=1/9*ones(3,3);
+h2=1/25*ones(5,5);
+% Attempt to recover the image
+b1=conv2(b,h1,'same');
+b2=conv2(b,h2,'same');
+c1=conv2(c,h1,'same');
+c2=conv2(c,h2,'same');
+d1=conv2(d,h1,'same');
+d2=conv2(d,h2,'same');
+
+% displaying the result
+figure,subplot(2,2,1),imshow(a),title('Original Image'),
+subplot(2,2,2),imshow(b),title('Salt & Pepper noise'),
+subplot(2,2,3),imshow(uint8(b1)),title('3 x 3 Averaging filter'),
+subplot(2,2,4),imshow(uint8(b2)),title('5 x 5 Averaging filter')
+
+figure,subplot(2,2,1),imshow(a),title('Original Image'),
+subplot(2,2,2),imshow(c),title('Gaussian noise'),
+subplot(2,2,3),imshow(uint8(c1)),title('3 x 3 Averaging filter'),
+subplot(2,2,4),imshow(uint8(c2)),title('5 x 5 Averaging filter'),
+
+figure,subplot(2,2,1),imshow(a),title('Original Image'),
+subplot(2,2,2),imshow(d),title('Speckle noise'),
+subplot(2,2,3),imshow(uint8(d1)),title('3 x 3 Averaging filter'),
+subplot(2,2,4),imshow(uint8(d2)),title('5 x 5 Averaging filter'),
+
+
+
+
+%%% program is for comparing averaging & median filter.
+
+clc;
+clear all;
+close all;
+a=imread("cameraman.tif");
+ 
+%Addition of salt and pepper noise
+b=imnoise(a,'salt & pepper',0.1);
+ 
+%Defining the box and median filters
+h1=1/9*ones(3,3);
+h2=1/25*ones(5,5);
+c1=conv2(b,h1,'same');
+c2=conv2(b,h2,'same');
+c3=medfilt2(b,[3 3]);
+c4=medfilt2(b,[5 5]);
+subplot(3,2,1),imshow(a),title('Original image')
+subplot(3,2,2),imshow(b),title('Salt & pepper noise')
+subplot(3,2,3),imshow(uint8(c1)),title('3 x 3 smoothing')
+subplot(3,2,4),imshow(uint8(c2)),title('5 x 5 smoothing')
+subplot(3,2,5),imshow(uint8(c3)),title('3x 3 Median filter')
+subplot(3,2,6),imshow(uint8(c4)),title('5 x 5 Median filter')
+
+
+ 
+%%High Pass-Laplacian Code: 
+% this program is for sharpening spatial domain filter
+A=ones(200,200);
+A(30:60,30:60)=0;
+A(70:150,50:170)=0
+figure(1) ,subplot(1,2,1)
+imshow(A)
+AM=[1 1 1;1 -8 1;1 1 1];
+B=conv2(A,AM);
+subplot(1,2,2), imshow(B)
+
+
+% this program is for sharpening spatial domain filter
+a=imread("pout.tif");
+
+%Defining the laplacian filters
+h1=[0 -1 0;-1 4 -1;0 -1 0]
+h2=[-1 -1 -1;-1 8 -1; -1 -1 -1];
+h3=[-1 -1 -1;-1 9 -1; -1 -1 -1];
+c1=conv2(a,h1,'same');
+c2=conv2(a,h2,'same');
+c3=conv2(a,h3,'same');
+subplot(2,2,1),imshow(a),title('Original image')
+subplot(2,2,2),imshow(uint8(c1)),title('Laplacian sharpening 4 at center')
+subplot(2,2,3),imshow(uint8(c2)),title('Laplacian sharpening 8 at center ')
+subplot(2,2,4),imshow(uint8(c3)),title(' Laplacian sharpening 9 at center')
+
+
+
+ 
+
+
+
+
+
+

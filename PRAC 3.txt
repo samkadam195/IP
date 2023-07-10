@@ -1,0 +1,313 @@
+A)Aim : Program to apply Discrete Fourier Transform on an image
+
+clc;
+clear all;
+close all;
+ 
+% to create an image, find and display its Fourier transform & also to find the inverse fourier transform %
+a=zeros(256,256);
+a(110:140,110:140)=1;
+subplot(3,1,1), imshow(a), title('Input Image');
+a1=log(1+abs(fftshift(fft2(a))));
+subplot(3,1,2),imshow(mat2gray(a1)),title('Fourier Transform of the input image');
+a1=fft2(a);
+b=ifft2(a1);
+subplot(3,1,3), imshow (b), title('Input image obtained by Inverse fourier transform');
+
+% find and display Fourier transformof an img 
+clc
+clear all
+close all
+I = imread('cameraman.tif');
+subplot(2,2,1);
+imshow(I);
+title('Original Image'); 
+subplot(2,2,2);
+F = fft2(I);
+imshow(abs(F),[]);
+title('FFT'); 
+subplot(2,2,3);
+imshow(log(abs(F)),[])
+title('log - FFT'); 
+F = fftshift(F);
+subplot(2,2,4);
+imshow(log(abs(F)),[])
+title('centered - log - FFT');
+
+
+
+
+
+B)Aim: Program to apply Low pass and High pass filters in frequency domain 
+Part I :- Study of frequency domain filters .
+
+%% Ideal low pass filter %%
+clc
+clear all
+close all
+a = imread('cameraman.tif');
+a = double(a);
+c=size(a);
+N=c(1);
+D0= input("Enter the cut-off frequency: ");
+for u=1:1:c(1)
+    for v=1:1:c(2)
+        D = ((u-(N/2))^2+(v-(N/2))^2)^0.5;
+            if D<D0
+        H(u,v) = 1;
+            else
+        H(u,v) = 0;
+        end
+    end
+end
+vv=fft2(a);
+vc=fftshift(vv);
+x=vc.*H;
+X=abs(ifft2(x));
+
+%Plotting%
+figure(1), imshow(uint8(a))
+figure(2),mesh(H)
+figure(3), imshow(uint8(X))
+figure(4), imagesc(H),colormap(gray)
+
+
+%This code is used to Butterworth lowpass filter
+clc;
+close all;
+clear all;
+a=imread('cameraman.tif');
+a=double(a)
+c=size(a);
+N=c(1);
+n=input("Enter the order of the filter: ")
+D0=input("Enter the cut-off frequency: ");
+for u=1:1:c(1)
+    for v=1:1:c(2)
+        D = ((u-(N/2))^2+(v-(N/2))^2)^0.5;
+        H(u,v)=1/(1+((D/D0)^2*n));
+    end
+end
+vv=fft2(a);
+vc=fftshift(vv);
+x=vc.*H;
+X=abs(ifft2(x));
+
+%Plotting
+figure(1), imshow(uint8(a))
+figure(2),mesh(H)
+figure(3), imshow(uint8(X))
+figure(4), imagesc(H),colormap(gray)
+
+
+
+%This code is used to Gaussian lowpass filter
+clc;
+close all;
+clear all;
+a=imread('cameraman.tif');
+a=double(a)
+c=size(a);
+N=c(1);
+D0=input("Enter the cut-off frequency / standard deviation: ");
+for u=1:1:c(1)
+    for v=1:1:c(2)
+        Dx= ((u-(N/2))^2+(v-(N/2))^2)^0.5;
+        D=Dx*Dx
+        H(u,v)=exp(-D/(2*D0*D0));
+    end
+end
+ vv=fft2(a);
+vc=fftshift(vv);
+x=vc.*H;
+X=abs(ifft2(x));
+
+%Plotting
+figure(1), imshow(uint8(a))
+figure(2),mesh(H)
+figure(3), imshow(uint8(X))
+figure(4), imagesc(H),colormap(gray)
+
+
+
+
+%% Ideal high pass filter
+clc;
+clear all;
+close all;
+a=imread('cameraman.tif');
+a = double(a);
+[row,col]=size(a);
+set= input("Enter the cut-off frequency: ");
+for u=1:1:row
+    for v=1:1:col
+        D = ((u-(row/2))^2+(v-(col/2))^2)^0.5;
+            if D<set
+        H(u,v) = 0;
+            else
+        H(u,v) = 1;
+        end
+    end
+end
+vv=fft2(a);
+vc=fftshift(vv);
+x=vc.*H;
+X=abs(ifft2(x));
+
+%Plotting%
+figure(1), imshow(uint8(a))
+figure(2),mesh(H)
+figure(3), imshow(uint8(X))
+figure(4), imagesc(H),colormap(gray)
+
+
+
+
+%% Butterworth high pass filter
+clc;
+close all;
+clear all;
+a=imread('cameraman.tif');
+a=double(a)
+c=size(a);
+N=c(1);
+n=input("Enter the order of the filter: ")
+D0=input("Enter the cut-off frequency: ");
+for u=1:1:c(1)
+    for v=1:1:c(2)
+        D = ((u-(N/2))^2+(v-(N/2))^2)^0.5;
+        H(u,v)=1/(1+((D0/D)^2*n));
+    end
+end
+vv=fft2(a);
+vc=fftshift(vv);
+x=vc.*H;
+X=abs(ifft2(x));
+
+%Plotting
+figure(1), imshow(uint8(a))
+figure(2),mesh(H)
+figure(3), imshow(uint8(X))
+figure(4), imagesc(H),colormap(gray)
+
+
+
+
+%% This code is used to Gaussian highpass filter
+clc;
+close all;
+clear all;
+a=imread('cameraman.tif');
+a=double(a)
+c=size(a);
+N=c(1);
+D0=input("Enter the cut-off frequency / standard deviation: ");
+for u=1:1:c(1)
+    for v=1:1:c(2)
+        Dx= ((u-(N/2))^2+(v-(N/2))^2)^0.5;
+        D=Dx*Dx
+        H(u,v)=1-exp(-D/(2*D0*D0));
+    end
+end
+ vv=fft2(a);
+vc=fftshift(vv);
+x=vc.*H;
+X=abs(ifft2(x));
+
+
+%Plotting
+figure(1), imshow(uint8(a))
+figure(2),mesh(H)
+figure(3), imshow(uint8(X))
+figure(4), imagesc(H),colormap(gray)
+
+
+
+
+
+
+C) Aim: Write a Program High Boost Filtering & Homomorphic Filtering
+
+%%High Boost Filtering
+clear all
+clc
+a = imread("tire.tif")
+a = double(a);
+[row col] = size(a);
+for u = 1:1:row
+    for v = 1:1:col
+        D = ((u-(row/2))*2+(v-(col/2))*2)*0.5;
+        if D<10; %cut-off is taken as 10. It could be changed
+            H(u,v) = 0;  %%..as per the requirement
+        else
+            H(u,v) = 1;
+        end
+    end
+end
+A = 1.5;
+%% This is the high boost factor. It could be changed.
+H1 = (A-1)+H;  %%..as per requirement
+vv = fft2(a);
+vc = fftshift(vv);  %%Required to centre the transform
+x = vc.*H;  %%Multiplication by the high pass filter
+x1 = vc.*H1;  %%Multiplication by the high boost filter
+X = abs(ifft2(x));
+X1 = abs(ifft2(x1));
+%%Plotting%%
+figure(1)
+imshow(uint8(a))
+figure(2)
+mesh(H)
+figure(3)
+imshow(uint8(X))
+figure(4)
+mesh(H1)
+figure(5)
+imshow(uint8(X1))
+
+
+
+%%Homomorphic Filtering
+%%Program for homomorphic filtering
+clear all
+clc
+a = imread("tire.tif")
+a = double(a);
+b = a;
+%% constants required for the filter
+D0 = 5;
+Y1 = 1;
+Yh = 2;
+[row col] =  size(a);
+ 
+%% To make sure that the coefficients are not zero
+for x=1:1:row
+    for y=1:1:col
+        if a(x,y)==0
+            b(x,y)=1;
+        end
+    end
+end
+hi=log(b);
+c=fft2(hi);
+d=fftshift(c);
+for u=1:1:row
+    for v=1:1:col
+        D = ((u-(row/2))^2+(v-(col/2))^2)^0.5;
+        H(u,v)=(Yh-Y1)*(1-exp(-1*((D*D)/(D0*D0))))+Y1;
+    end
+end
+x=d.*H;
+fin=abs(ifft2(x));
+final=exp(fin);
+figure(1), imshow(uint8(a))
+figure(2), imshow(uint8(x))
+figure(3), imshow(uint8(final))
+
+
+
+
+
+
+
+

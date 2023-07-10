@@ -1,0 +1,112 @@
+A) AIM: Program to apply erosion, dilation, opening, closing
+
+% MATLAB program for Erosion and Dilation
+close all;
+clear all;
+clc;
+I  = imread('blobs.png');
+subplot(1,3,1);
+imshow(I);
+title('Original Image')
+se = strel('rectangle',[5 5]); %Create a rectangular structuring element.
+eroded_DD= imerode(I,se); %Erode the image with the structuring element.
+subplot(1,3,2);imshow(eroded_DD);
+title('Eroded Image')
+dilate_DD = imdilate(I,se); %Dilate the image with the structuring element.
+subplot(1,3,3);imshow(dilate_DD);title('Dilated Image')
+
+
+
+% MATLAB program for Opening and Closing of binary Image
+close all;
+clear all;
+clc;
+I = imread('blobs.png');
+subplot(1,4,1);imshow(I);
+title('Blobs Image')
+se = strel('rectangle',[5 5]);%Create a rectangular structuring element.
+open_DD = imopen(I,se); %Open the image with the structuring element.
+subplot(1,4,2);imshow(open_DD);
+title('Opened Image')
+J  = imread('circles.png');
+subplot(1,4,3);
+imshow(J);
+title('Circles Image')
+close_DD = imclose(J,se); %Close the image with the structuring element.
+subplot(1,4,4);
+imshow(close_DD);
+title('Closed Image')
+
+
+
+% MATLAB program for Opening and Closing Grayscale Image
+close all;
+clear all;
+clc;
+I  = imread('peppers.png');
+I = rgb2gray(I);
+subplot(1,3,1);
+imshow(I);
+title('Original Image')
+se = strel('rectangle',[5 5]);%Createa rectangular structuring element.
+open_DD = imopen(I,se); %Open the image with the structuring element.
+subplot(1,3,2);
+imshow(open_DD);
+title('Opened Image')
+close_DD = imclose(I,se); %Close the image with the structuring element.
+subplot(1,3,3);
+imshow(close_DD);
+title('Closed Image')
+
+
+
+
+ 
+
+B) Aim: Program for detecting boundary of an image
+
+% MATLAB program for Boundary extraction
+close all;
+clear all;
+clc;
+I  = imread('circles.png');
+subplot(1,2,1);
+imshow(I);
+title('Original Image')
+SE = strel('rectangle',[5 5]);
+% Erode the image
+I1=imerode(I,SE);
+% Take the difference of original and eroded image
+I2= I-I1;subplot(1,2,2);
+imshow(I2);
+title('Boundary Image')
+
+
+
+
+
+
+
+
+
+C) Aim: Program to apply Hit-or-Miss transform
+
+% MATLAB program for Thinning
+close all;
+clear all;
+clc;
+A  = imread('blobs.png');
+subplot(1,3,1);
+imshow(A);
+title('Original Image')
+SE1=[1 1 1;1 1 1;1 1 1];
+SE2=~SE1;
+bw=bwhitmiss(A,SE1,SE2);
+subplot(1,3,2);
+imshow(bw);
+title('Output of Hit and Miss Transform');
+D = A -bw; % Take the difference of originaland HMT image.
+subplot(1,3,3);
+imshow(D);
+title('Thinned Image')
+

@@ -1,0 +1,84 @@
+A) Aim: Program to denoise using spatial mean, median and adaptive mean filtering
+
+clc;
+clear all;
+close all;
+f=imread('tire.tif');
+g=imnoise(f,'salt & pepper',0.1);
+subplot(2,3,1), imshow(g),title('Input image corrupted by salt and pepper noise');
+g1 = spfilt(g,'amean',3,3);
+subplot(2,3,2),imshow(g1),title('Salt and Pepper Noise removal with arithmetic mean filter ');
+g2=spfilt(g,'median',3,3);
+subplot(2,3,3),imshow(g2),title('Salt and Pepper Noise removal with median filter ');
+[M N]=size(f);
+ 
+R=imnoise2(ones(M,N),'salt & pepper',0.1,0);
+gp=f;
+gp(R==0)=0;
+subplot(2,3,4),imshow(gp),title('Image corrupted by Pepper noise');
+g4=spfilt(gp,'max',3,3);
+subplot(2,3,6),imshow(g4),title('Pepper noise removal by max filter');
+[M N]=size(f);
+ 
+R=imnoise2(ones(M,N),'salt & pepper',0.1,0);;
+gs=f;gs(R==1)=255;
+ 
+figure,subplot(2,3,1),imshow(gs),title('Image corrupted by Salt noise');
+g6=spfilt(gs,'min',3,3);
+subplot(2,3,3),imshow(g6),title('Salt noise removal by min filter');
+gh=imnoise(f,'gaussian');
+ 
+subplot(2,3,4),imshow(gh),title('Image corrupted by gaussian noise');
+g7=spfilt(gh,'gmean',3,3);subplot(2,3,5),imshow(g7),title('Gaussian noise removal by geometric mean filter');
+g8=spfilt(gh,'hmean',3,3);subplot(2,3,6),imshow(g8),title('Gaussian removal by harmonic mean filter');
+rmse1=compare(f,g);
+ 
+disp('The RMSE between the input image and the image with salt and pepper noise'),rmse1
+rmse2=compare(f,g1);
+disp('The RMSE after applying arithmetic mean filter for reducing salt and pepper noise'),rmse2
+rmse3=compare(f,g2);
+disp('The RMSE after applying median filter for reducing salt and pepper noise'),rmse3
+rmse4=compare(f,gp);
+disp('The RMSE between the input image and the image with pepper noise'),rmse4
+rmse6=compare(f,g4);
+disp('The RMSE after applying max filter for reducing pepper noise'),rmse6
+rmse7=compare(f,gs);
+disp('The RMSE between the input image and the image with salt noise'),rmse7
+rmse9=compare(f,g6);
+disp('The RMSE after applying min filter for reducing salt noise'),rmse9
+rmse10=compare(f,gh);
+disp('The RMSE between the input image and the image withgaussian noise'),rmse10
+rmse11=compare(f,g7);
+disp('The RMSE after applying geometric mean filter for reducing gaussian noise'),rmse11
+rmse12=compare(f,g8);
+disp('The RMSE after applying harmonic mean filter for reducing gaussain noise'),rmse12
+
+disp('The RMSE after applying geometric mean filter for reducing gaussian noise'),rmse11rmse12=compare(f,g8);
+disp('The RMSE after applying harmonic mean filter for reducing gaussain noise'),rmse12;
+
+
+
+
+
+B) Aim: Program for Image deblurring using inverse, Weiner filters
+
+%% Program for Image deblurring using inverse, Weiner filters
+clc;
+clear all;
+close all;
+I = im2double(imread('cameraman.tif'));
+subplot(2,2,1),imshow(I),title('Input Image');
+LEN = 21;
+THETA = 11;
+PSF = fspecial('motion', LEN, THETA);
+blurred = imfilter(I, PSF, 'conv', 'circular');
+noise_mean = 0;
+noise_var = 0.0001;
+blurred_noisy = imnoise(blurred, 'gaussian',noise_mean, noise_var);
+subplot(2,2,2),imshow(blurred_noisy),title('Input Image degraded by motion blur and noise');
+estimated_nsr = 0;
+wnr2 = deconvwnr(blurred_noisy, PSF, estimated_nsr);subplot(2,2,3), imshow(wnr2),title('Restoration of Blurred, Noisy Image Using Ideal Inverse Filter');
+estimated_nsr = noise_var / var(I(:));
+wnr3 = deconvwnr(blurred_noisy, PSF, estimated_nsr);
+subplot(2,2,4),imshow(wnr3), title('Restoration of Blurred, Noisy Image UsingEstimated NSR');
+

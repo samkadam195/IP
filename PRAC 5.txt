@@ -1,0 +1,122 @@
+A) Program to  read  a  color  image  and  segment  into  RGB  planes, histogram of 
+
+close all,
+clear all,
+clc,Orig=imread('football.jpg');
+PlotRow = 2;
+PlotCol = 2;
+subplot(PlotRow,PlotCol,1); 
+imshow(Orig);
+[row col c] = size(Orig);
+str = strcat('Original Image of Size = [',num2str(size(Orig)),']');
+title(str);
+Blank = zeros(row,col);
+R = Orig(:, :, 1);
+R_Comp_Image = cat(3,R,Blank,Blank);
+subplot(PlotRow,PlotCol,2); 
+imshow(R_Comp_Image);
+title('R-Component Image');
+G = Orig(:, :, 2);
+G_Comp_Image = cat(3,Blank,G,Blank);
+subplot(PlotRow,PlotCol,3); 
+imshow(G_Comp_Image);
+title('G-Component Image');
+B = Orig(:, :, 3);
+B_Comp_Image = cat(3,Blank,Blank,B);
+subplot(PlotRow,PlotCol,4); 
+imshow(B_Comp_Image);
+title('B-Component Image');
+PlotRow = 3;PlotCol = 2;
+figure,subplot(PlotRow,PlotCol,1); 
+imshow(R_Comp_Image);title('R-Component Image');
+subplot(PlotRow,PlotCol,2);
+[P,X] = imhist(R); plot(X,P,'r');
+title('R-Component Image Histogram');
+xlabel(' Pixel Intensity (0 –255) —>');
+ylabel('No. of Pixels —>');
+subplot(PlotRow,PlotCol,3);
+imshow(G_Comp_Image);
+title('G-Component Image');
+subplot(PlotRow,PlotCol,4);
+[P,X] = imhist(G); 
+plot(X,P,'g');
+title('G-Component Image Histogram');
+xlabel(' Pixel Intensity (0 –255) —>');
+ylabel('No. of Pixels —>');
+subplot(PlotRow,PlotCol,5); 
+imshow(B_Comp_Image);
+title('B-Component Image');
+subplot(PlotRow,PlotCol,6);
+[P,X] = imhist(B); 
+plot(X,P,'b');
+title('B-Component Image Histogram');
+xlabel('—Pixel Intensity (0 –255) —>');
+ylabel('No. of Pixels —>');
+
+
+
+
+
+Aim : B) Program for converting from one color model to another model.
+
+% Color Image segmentation
+clc;
+clear all;
+close all;
+a=imread('peppers.png');
+%Conversion of RGB to HSV
+b=rgb2hsv(a);  
+figure(1);imshow(a),title('original image')
+figure(2); imshow(b),title('hsv image')
+imshow(b),title('hsv image')
+
+
+
+
+
+C) Program to apply false colouring(pseudo) on a gray scale image
+
+clc;
+clear all;
+close all;	
+% Read image from graphics file
+input_img=imread('rice.png'); 
+%Array dimensions
+[m n]=size(input_img); 
+%Convert to double precision
+input_img=double(input_img); 
+for i=1:m
+    for j=1:n
+        if input_img(i,j)>=0 & input_img(i,j)<50
+            output_img(i,j,1)=input_img(i,j,1)+50;
+            output_img(i,j,2)=input_img(i,j)+100;
+            output_img(i,j,3)=input_img(i,j)+10;
+        end
+        if input_img(i,j)>=50 & input_img(i,j)<100
+            output_img(i,j,1)=input_img(i,j)+35;
+            output_img(i,j,2)=input_img(i,j)+128;
+            output_img(i,j,3)=input_img(i,j)+10;
+        end
+        if input_img(i,j)>=100 & input_img(i,j)<150
+            output_img(i,j,1)=input_img(i,j)+152;
+            output_img(i,j,2)=input_img(i,j)+130;
+            output_img(i,j,3)=input_img(i,j)+15;
+        end
+        if input_img(i,j)>=150 & input_img(i,j)<200
+            output_img(i,j,1)=input_img(i,j)+50;
+            output_img(i,j,2)=input_img(i,j)+140;
+            output_img(i,j,3)=input_img(i,j)+25;
+        end
+        if input_img(i,j)>=200 & input_img(i,j)<=256
+            output_img(i,j,1)=input_img(i,j)+120;
+            output_img(i,j,2)=input_img(i,j)+160;
+            output_img(i,j,3)=input_img(i,j)+45;
+        end
+    end
+end
+subplot(2,2,1), % Create axes in tiled positions
+imshow(uint8(input_img)), %Display input image
+title('Input Image') %Add title to current axes
+subplot(2,2,2), % Create axes in tiled positions
+imshow(uint8(output_img)), %Display output image
+title('Pseudo Coloured Image') %Add title to current axes
